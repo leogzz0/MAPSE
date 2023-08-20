@@ -1,0 +1,4 @@
+flask - python web server
+pandas - python data maniuplation and analysis library
+requests - connections to web servers for downloading html
+beautifulsoup4 - parse html and extract data from html
