@@ -9,12 +9,12 @@ from urllib.parse import quote_plus
 def search_api(query, pages=int(RESULT_COUNT/10)):
     results = []
     for i in range(0, pages):
-        start = i * 10 + i
+        start = i*10+i
         url = SEARCH_URL.format(
             key=SEARCH_KEY,
             cx=SEARCH_ID,
             # ensure url format (ex. in: hello world out: hello_world)
-            query=quote_plus,
+            query=quote_plus(query),
             start=start
         )
         #request from api in json format
@@ -31,6 +31,7 @@ def search_api(query, pages=int(RESULT_COUNT/10)):
 def scrape_page(links):
     html = []
     for link in links:
+        print(link)
         try:
             #download the html of each page
             data = requests.get(link, timeout=5)
@@ -48,6 +49,7 @@ def search(query):
     stored_results = storage.query_results(query)
     if stored_results.shape[0] > 0:
         stored_results["created"] = pd.to_datetime(stored_results["created"])
+        print("Results founded in database.")
         return stored_results[columns]
     
     #when results are not in the database storage

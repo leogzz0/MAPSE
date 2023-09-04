@@ -13,7 +13,7 @@ class DBStorage():
             CREATE TABLE IF NOT EXISTS results (
                 id INTEGER PRIMARY KEY,
                 query TEXT,
-                rank INTEGER
+                rank INTEGER,
                 link TEXT,
                 title TEXT,
                 snippet TEXT,
@@ -35,8 +35,14 @@ class DBStorage():
     def insert_row(self, values):
         cur = self.con.cursor()
         try:
-            cur.execute('INSERT INTO results (query, rank, link, title, nsippet, html, created) VALUES(?,?,?,?,?,?,?)', values)
+            cur.execute('INSERT INTO results (query, rank, link, title, snippet, html, created) VALUES(?,?,?,?,?,?,?)', values)
             self.con.commit()
         except sqlite3.IntegrityError:
             pass
+        cur.close()
+
+    def update_relevance(self, query, link, relevance):
+        cur = self.con.cursor()
+        cur.execute("UPDATE results SET relevance=? WHERE query=? AND link=?", [relevance, query, link])
+        self.con.commit()
         cur.close()
